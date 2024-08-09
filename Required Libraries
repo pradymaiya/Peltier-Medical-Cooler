@@ -1,0 +1,4 @@
+Required Libraries
+OneWire for the DS18B20 temperature sensor.
+DallasTemperature for easy communication with the DS18B20 sensor.
+LiquidCrystal_I2C for the LCD display.
