@@ -1,0 +1,83 @@
+#include <OneWire.h>
+#include <DallasTemperature.h>
+#include <LiquidCrystal_I2C.h>
+
+#define ONE_WIRE_BUS 2 // Data pin for DS18B20
+#define PELTIER1 9
+#define PELTIER2 10
+#define PELTIER3 11
+#define FAN 5
+#define BUTTON1 3
+#define BUTTON2 4
+#define BUTTON3 6
+
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensors(&oneWire);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+float targetTemp = 25.0; // Default target temperature
+
+void setup() {
+  pinMode(PELTIER1, OUTPUT);
+  pinMode(PELTIER2, OUTPUT);
+  pinMode(PELTIER3, OUTPUT);
+  pinMode(FAN, OUTPUT);
+  pinMode(BUTTON1, INPUT_PULLUP);
+  pinMode(BUTTON2, INPUT_PULLUP);
+  pinMode(BUTTON3, INPUT_PULLUP);
+
+  lcd.begin();
+  lcd.backlight();
+  sensors.begin();
+
+  lcd.print("Peltier Cooler");
+  delay(2000);
+  lcd.clear();
+}
+
+void loop() {
+  sensors.requestTemperatures();
+  float currentTemp = sensors.getTempCByIndex(0);
+
+  lcd.setCursor(0, 0);
+  lcd.print("Temp: ");
+  lcd.print(currentTemp);
+  lcd.print(" C");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Target: ");
+  lcd.print(targetTemp);
+  lcd.print(" C");
+
+  if (digitalRead(BUTTON1) == LOW) {
+    targetTemp -= 1.0;
+    delay(500);
+  }
+
+  if (digitalRead(BUTTON2) == LOW) {
+    targetTemp += 1.0;
+    delay(500);
+  }
+
+  if (digitalRead(BUTTON3) == LOW) {
+    targetTemp = 25.0;
+    delay(500);
+  }
+
+  controlPeltier(currentTemp, targetTemp);
+  delay(1000);
+}
+
+void controlPeltier(float currentTemp, float targetTemp) {
+  if (currentTemp > targetTemp) {
+    analogWrite(PELTIER1, 255);
+    analogWrite(PELTIER2, 255);
+    analogWrite(PELTIER3, 255);
+    analogWrite(FAN, 255);
+  } else {
+    analogWrite(PELTIER1, 0);
+    analogWrite(PELTIER2, 0);
+    analogWrite(PELTIER3, 0);
+    analogWrite(FAN, 0);
+  }
+}
