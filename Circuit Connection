@@ -1,0 +1,4 @@
+Peltier Modules:Connect the positive terminal of each Peltier module to a separate PWM-enabled digital pin 9, 10, 11 on the Arduino Mega.Connect the negative terminals of all Peltier modules to the ground (GND) of the Arduino Mega.
+Heatsink and Fan:Connect the fan's positive terminal to a PWM-enabled digital pin 5.Connect the fan's negative terminal to the ground (GND) of the Arduino Mega.
+Temperature Sensor DS18B20:CC → 5V on Arduino, GND → GND on Arduino, Data → Digital pin 2 on Arduino, Pull-up resistor (4.7kΩ) between Data and VCC
+LCD Display :SDA → SDA on Arduino Mega, SCL → SCL on Arduino Mega, VCC → 5V on Arduino Mega, GND → GND on Arduino Mega
